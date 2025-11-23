@@ -1,0 +1,720 @@
+{
+	"info": {
+		"_postman_id": "068ac8b9-4638-434e-905e-0cf1dc614195",
+		"name": "Attendance System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38670371"
+	},
+	"item": [
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "signUp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"let token = response.token;\r",
+									"pm.environment.set(\"JWT\", token)"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"kareem emad\",\r\n    \"email\": \"kareem3680@gmail.com\",\r\n    \"phone\": \"+201060867257\",\r\n    \"password\": \"abc123\",\r\n    \"passwordConfirmation\": \"abc123\",\r\n    \"position\": \"backend developer\",\r\n    \"hireDate\": \"2025-09-26\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/auth/signUp",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signUp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logIn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"let token = response.token;\r",
+									"pm.environment.set(\"JWT\", token)"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ahmed.ali@example.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/auth/logIn",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logIn"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeMyPassword",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"let token = response.token;\r",
+									"pm.environment.set(\"JWT\", token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"currentPassword\":\"\",\r\n    \"newPassword\":\"\",\r\n    \"newPasswordConfirm\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/updatePassword/",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"updatePassword",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "userDashboard",
+			"item": [
+				{
+					"name": "checkIn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"if (json && json.data && json.data._id) {",
+									"  pm.environment.set('attendanceId', json.data._id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/attendance/checkin",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attendance",
+								"checkin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "toggleBreak",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"if (json && json.data && json.data._id) {",
+									"  pm.environment.set('attendanceId', json.data._id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/attendance/toggle-break",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attendance",
+								"toggle-break"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "checkOut",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/attendance/checkout",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attendance",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMyData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/userDashboard/getMyData",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"userDashboard",
+								"getMyData"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateMyData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Ahmed Ali\",\r\n    \"email\": \"ahmed.ali000@example.com\",\r\n    \"phone\": \"+201234567890\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/userDashboard/updateMyData",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"userDashboard",
+								"updateMyData"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "adminDashboard",
+			"item": [
+				{
+					"name": "getAllAttendance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/attendance?from=2025-01-01&to=2025-12-31&page=1&limit=20&search=101",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attendance"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2025-01-01"
+								},
+								{
+									"key": "to",
+									"value": "2025-12-31"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "search",
+									"value": "101"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSpecificAttendance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/attendance/68d541cf7b8e0215a07c5316",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attendance",
+								"68d541cf7b8e0215a07c5316"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attendaceSummary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/attendance/summary/68da76f391a76d10fc0aa364?from=2025-09-27&to=2025-09-29",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"attendance",
+								"summary",
+								"68da76f391a76d10fc0aa364"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2025-09-27"
+								},
+								{
+									"key": "to",
+									"value": "2025-09-29"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"kareem Emad\",\r\n    \"email\": \"kareem.a@example.com\",\r\n    \"phone\": \"+201245567890\",\r\n    \"password\": \"abc123\",\r\n    \"passwordConfirmation\": \"abc123\",\r\n    \"position\": \"Software Engineer\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/adminDashboard",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"adminDashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/adminDashboard?jobId=100",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"adminDashboard"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "jobId",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSpecificUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/adminDashboard/682cd24209b3cd29954d763e",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"adminDashboard",
+								"682cd24209b3cd29954d763e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUserRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/adminDashboard/6787816668730d28fe99332f",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"adminDashboard",
+								"6787816668730d28fe99332f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deactivateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/adminDashboard/deactivate/68d54eb71a883f6b507a26e0",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"adminDashboard",
+								"deactivate",
+								"68d54eb71a883f6b507a26e0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "activateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/adminDashboard/activate/68d54eb71a883f6b507a26e0",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"adminDashboard",
+								"activate",
+								"68d54eb71a883f6b507a26e0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

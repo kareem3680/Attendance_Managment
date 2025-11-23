@@ -1,0 +1,44 @@
+{
+  "name": "attendance-back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "bcryptjs": "^3.0.2",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "cross-env": "^10.1.0",
+    "dompurify": "^3.2.7",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^8.1.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "jsdom": "^27.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.6.0",
+    "mongo-sanitize": "^1.1.0",
+    "mongoose": "^8.18.3",
+    "mongoose-sequence": "^6.0.1",
+    "morgan": "^1.10.1",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^7.0.9",
+    "nodemon": "^3.1.10",
+    "winston": "^3.17.0"
+  },
+  "engines": {
+    "node": "^22.19.0"
+  }
+}
