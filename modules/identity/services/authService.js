@@ -25,7 +25,7 @@ export const registerUser = asyncHandler(async (userData, req) => {
 
   sendEmail({
     email: user.email,
-    subject: "Welcome to Our Platform!",
+    subject: "Welcome to Styles Dispatch",
     message:
       "Your account has been successfully created!\nThank you for joining us.",
   }).catch((err) =>

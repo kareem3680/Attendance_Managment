@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "068ac8b9-4638-434e-905e-0cf1dc614195",
+		"_postman_id": "5d490c48-9920-4b1b-947d-c5ba5c8766cb",
 		"name": "Attendance System",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38670371"
+		"_exporter_id": "48758854",
+		"_collection_link": "https://stylestech2-3215592.postman.co/workspace/StylesTech's-Team's-Workspace~83ec1f3f-7eaa-4748-8628-a9252608258a/collection/48758854-5d490c48-9920-4b1b-947d-c5ba5c8766cb?action=share&source=collection_link&creator=48758854"
 	},
 	"item": [
 		{
@@ -31,7 +32,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"kareem emad\",\r\n    \"email\": \"kareem3680@gmail.com\",\r\n    \"phone\": \"+201060867257\",\r\n    \"password\": \"abc123\",\r\n    \"passwordConfirmation\": \"abc123\",\r\n    \"position\": \"backend developer\",\r\n    \"hireDate\": \"2025-09-26\"\r\n}",
+							"raw": "{\r\n    \"name\": \"kareem emad\",\r\n    \"email\": \"kareem@gmail.com\",\r\n    \"phone\": \"+201060867257\",\r\n    \"password\": \"Ezz106\",\r\n    \"passwordConfirmation\": \"Ezz106\",\r\n    \"position\": \"Dispatch Agent\",\r\n    \"hireDate\": \"2025-09-26\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

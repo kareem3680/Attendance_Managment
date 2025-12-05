@@ -118,7 +118,7 @@ export const toggleBreakService = asyncHandler(async (userId) => {
 });
 
 export const getAllAttendanceService = asyncHandler(async (req) => {
-  const { search, from, to } = req.query; // ?search=xxx&from=2025-09-01&to=2025-09-30
+  const { search, from, to } = req.query;
 
   const startDate = from
     ? moment(from, "YYYY-MM-DD").startOf("day").toDate()
@@ -145,7 +145,22 @@ export const getAllAttendanceService = asyncHandler(async (req) => {
     })
     .lean();
 
-  const filteredData = result.filter((doc) => doc.user);
+  let filtered = result.filter((doc) => doc.user);
+
+  filtered = filtered.map((doc) => {
+    const breakHours = (doc.totalBreakMinutes || 0) / 60;
+    const workHours = doc.totalWorkedHours || 0;
+    const actualHours = workHours - breakHours;
+
+    return {
+      ...doc,
+      workHours,
+      breakHours,
+      actualHours,
+
+      ...sanitizeAttendance(doc),
+    };
+  });
 
   await logger.info("Fetched all attendance records", {
     search: search || "no filter",
@@ -153,13 +168,13 @@ export const getAllAttendanceService = asyncHandler(async (req) => {
     to: moment(endDate).format("YYYY-MM-DD"),
   });
 
-  if (!filteredData.length) {
+  if (!filtered.length) {
     throw new ApiError("No lists Available For This period", 404);
   }
 
   return {
-    results: filteredData.length,
-    data: filteredData.map(sanitizeAttendance),
+    results: filtered.length,
+    data: filtered,
     period: {
       from: moment(startDate).format("YYYY-MM-DD"),
       to: moment(endDate).format("YYYY-MM-DD"),
@@ -178,13 +193,8 @@ export const getSpecificAttendanceService = asyncHandler(async (id) => {
 
 export const getAttendanceSummaryService = asyncHandler(
   async (userId, from, to) => {
-    const startDate = from
-      ? moment.tz(from, "YYYY-MM-DD", "Africa/Cairo").startOf("day").toDate()
-      : moment.tz("Africa/Cairo").startOf("month").toDate();
-
-    const endDate = to
-      ? moment.tz(to, "YYYY-MM-DD", "Africa/Cairo").endOf("day").toDate()
-      : moment.tz("Africa/Cairo").endOf("day").toDate();
+    const startDate = from || moment().startOf("month").format("YYYY-MM-DD");
+    const endDate = to || moment().format("YYYY-MM-DD");
 
     const records = await AttendanceModel.find({
       user: userId,
@@ -196,32 +206,36 @@ export const getAttendanceSummaryService = asyncHandler(
     }
 
     let totalWorkingDays = 0;
-    const current = moment(startDate);
+    const current = moment(startDate, "YYYY-MM-DD");
+    const end = moment(endDate, "YYYY-MM-DD");
 
-    while (current.toDate() <= endDate) {
+    while (current.isSameOrBefore(end)) {
       const day = current.day();
-      if (day !== 0 && day !== 6) {
-        totalWorkingDays++;
-      }
+      if (day !== 0 && day !== 6) totalWorkingDays++;
       current.add(1, "day");
     }
 
-    const daysWorked = records.length;
+    const effectiveRecords = records.filter((r) => {
+      const day = moment(r.date).day();
+      return day !== 0 && day !== 6;
+    });
+
+    const daysWorked = effectiveRecords.length;
     const daysAbsent = totalWorkingDays - daysWorked;
-    const expectedHours = toDecimal(totalWorkingDays * 9);
 
-    const actualHours = toDecimal(
-      records.reduce((sum, r) => sum + (r.totalWorkedHours || 0), 0)
-    );
-
-    const totalBreakMinutes = records.reduce(
-      (sum, r) => sum + (r.totalBreakMinutes || 0),
+    const totalWorkedHours = effectiveRecords.reduce(
+      (sum, r) => sum + (r.totalWorkedHours || 0),
       0
     );
 
-    const totalBreakHours = toDecimal(totalBreakMinutes / 60);
+    const totalBreakHours = toDecimal(
+      effectiveRecords.reduce((sum, r) => sum + (r.totalBreakMinutes || 0), 0) /
+        60
+    );
 
-    const differenceHours = toDecimal(actualHours - expectedHours);
+    const actualHours = toDecimal(totalWorkedHours - totalBreakHours);
+    const expectedHours = toDecimal(totalWorkingDays * 9);
+    const differenceHours = toDecimal(totalWorkedHours - expectedHours);
 
     const user = records[0].user;
 
@@ -232,10 +246,7 @@ export const getAttendanceSummaryService = asyncHandler(
         jobId: user.jobId,
       },
       summary: {
-        period: {
-          from: moment(startDate).tz("Africa/Cairo").format("YYYY-MM-DD"),
-          to: moment(endDate).tz("Africa/Cairo").format("YYYY-MM-DD"),
-        },
+        period: { from: startDate, to: endDate },
         daysWorked,
         daysAbsent,
         expectedHours,

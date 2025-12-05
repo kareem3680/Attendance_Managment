@@ -28,6 +28,17 @@ export function sanitizeUser(user) {
 }
 
 export function sanitizeAttendance(attendance) {
+  function toDecimal(num, decimals = 2) {
+    return Number(Number(num).toFixed(decimals));
+  }
+
+  const breakHours = (attendance.totalBreakMinutes || 0) / 60;
+
+  const netWorkedHours =
+    attendance.totalWorkedHours && attendance.totalWorkedHours > 0
+      ? toDecimal(attendance.totalWorkedHours - breakHours)
+      : attendance.totalWorkedHours;
+
   return sanitizeObject(attendance, [
     ["id", (a) => a._id],
     ["userName", (a) => a.user?.name],
@@ -35,15 +46,19 @@ export function sanitizeAttendance(attendance) {
     ["date", (a) => a.date],
     ["checkInAt", (a) => a.checkInAt],
     ["checkOutAt", (a) => a.checkOutAt],
-    ["totalWorkedHours", (a) => a.totalWorkedHours],
+
+    ["totalWorkedHours", () => netWorkedHours],
     ["totalBreakMinutes", (a) => a.totalBreakMinutes || 0],
+
     [
       "breaks",
       (a) =>
-        a.breaks?.map((b) => ({
-          start: b.start,
-          end: b.end,
-        })),
+        Array.isArray(a.breaks)
+          ? a.breaks.map((b) => ({
+              start: b.start,
+              end: b.end,
+            }))
+          : [],
     ],
   ]);
 }
