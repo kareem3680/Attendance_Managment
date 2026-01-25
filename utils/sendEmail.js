@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import axios from "axios";
-dotenv.config({ path: "config.env" });
+dotenv.config({ path: "config.env", quiet: true });
 
 /**
  * Email Utility (Brevo API Edition)

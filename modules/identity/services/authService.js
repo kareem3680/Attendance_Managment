@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { compare } from "bcryptjs";
 import asyncHandler from "express-async-handler";
 
@@ -6,11 +5,12 @@ import sendEmail from "../../../utils/sendEmail.js";
 import userModel from "../models/userModel.js";
 import createToken from "../../../utils/createToken.js";
 import { sanitizeUser } from "../../../utils/sanitizeData.js";
+import { verifyToken } from "../../../utils/verifyToken.js";
 import ApiError from "../../../utils/apiError.js";
 import Logger from "../../../utils/loggerService.js";
 const logger = new Logger("auth");
 
-// ✅ Register user
+// Register user
 export const registerUser = asyncHandler(async (userData, req) => {
   const existingUser = await userModel.findOne({ email: userData.email });
   if (existingUser) {
@@ -36,7 +36,7 @@ export const registerUser = asyncHandler(async (userData, req) => {
   return { user: sanitizeUser(user), token };
 });
 
-// ✅ Login user
+// Login user
 export const loginUser = asyncHandler(async (email, password) => {
   const user = await userModel.findOne({ email }).select("+password");
   if (!user) {
@@ -63,7 +63,7 @@ export const loginUser = asyncHandler(async (email, password) => {
   return { user: sanitizeUser(user), token };
 });
 
-// ✅ Protect route
+// Protect route
 export const protect = asyncHandler(async (req) => {
   let token;
   if (
@@ -73,43 +73,11 @@ export const protect = asyncHandler(async (req) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  if (!token) {
-    throw new ApiError(
-      "🚫 You are not logged in. Please login and try again.",
-      401
-    );
-  }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const user = await userModel.findById(decoded.userId);
-  if (!user) {
-    await logger.error("Token verification failed - user not found", {
-      userId: decoded.userId,
-    });
-    throw new ApiError("🛑 User not found", 401);
-  }
-
-  if (user.changedPasswordAt) {
-    const changedTime = parseInt(user.changedPasswordAt.getTime() / 1000, 10);
-    if (changedTime > decoded.iat) {
-      await logger.error(
-        "Token invalid - password changed after token issued",
-        {
-          userId: user._id,
-        }
-      );
-      throw new ApiError(
-        "🛑 Password changed recently. Please login again.",
-        401
-      );
-    }
-  }
-
-  await logger.info("Token verified successfully", { userId: user._id });
+  const user = await verifyToken(token);
   return user;
 });
 
-// ✅ Role-based authorization
+// Role-based authorization
 export const allowedTo = asyncHandler(async (user, roles) => {
   if (!roles.includes(user.role)) {
     throw new ApiError("🚫 You are not authorized to access this route", 403);

@@ -62,3 +62,80 @@ export function sanitizeAttendance(attendance) {
     ],
   ]);
 }
+
+export function sanitizeConversation(conv) {
+  return sanitizeObject(conv, [
+    ["id", (c) => c._id],
+    [
+      "members",
+      (c) =>
+        Array.isArray(c.members)
+          ? c.members.map((u) => ({ id: u._id, name: u.name }))
+          : [],
+    ],
+    [
+      "lastMessage",
+      (c) =>
+        c.lastMessage
+          ? {
+              text: c.lastMessage.text,
+              sender: c.lastMessage.sender
+                ? {
+                    id: c.lastMessage.sender._id,
+                    name: c.lastMessage.sender.name,
+                  }
+                : null,
+              createdAt: c.lastMessage.createdAt,
+            }
+          : null,
+    ],
+    ["createdAt", (c) => c.createdAt],
+    ["updatedAt", (c) => c.updatedAt],
+  ]);
+}
+
+export function sanitizeMessage(msg) {
+  return sanitizeObject(msg, [
+    ["id", (m) => m._id],
+    ["conversationId", (m) => m.conversationId],
+    ["text", (m) => m.text],
+    [
+      "sender",
+      (m) => (m.sender ? { id: m.sender._id, name: m.sender.name } : null),
+    ],
+    ["seen", (m) => m.seen],
+    ["createdAt", (m) => m.createdAt],
+    ["updatedAt", (m) => m.updatedAt],
+  ]);
+}
+
+export function sanitizeNotification(notification) {
+  return sanitizeObject(notification, [
+    ["id", (n) => n._id],
+    ["title", (n) => n.title],
+    ["refId", (n) => n.refId],
+    ["message", (n) => n.message],
+    ["module", (n) => n.module],
+    ["importance", (n) => n.importance],
+    [
+      "from",
+      (n) =>
+        n.from
+          ? `${n.from.name}${n.from.jobId ? " (" + n.from.jobId + ")" : ""}`
+          : undefined,
+    ],
+    [
+      "toUser",
+      (n) =>
+        Array.isArray(n.toUser)
+          ? n.toUser
+              .filter((u) => u)
+              .map((u) => `${u.name}${u.jobId ? " (" + u.jobId + ")" : ""}`)
+          : [],
+    ],
+    ["toRole", (n) => n.toRole],
+    ["status", (n) => n.status],
+    ["createdAt", (n) => n.createdAt],
+    ["updatedAt", (n) => n.updatedAt],
+  ]);
+}

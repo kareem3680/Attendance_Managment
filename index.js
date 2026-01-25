@@ -1,6 +1,6 @@
 // Load env
 import dotenv from "dotenv";
-dotenv.config({ path: "config.env" });
+dotenv.config({ path: "config.env", quiet: true });
 
 // Core imports
 import express, { json } from "express";
@@ -9,6 +9,7 @@ import cors from "cors";
 
 // Security & utils
 import "./utils/cronJob.js";
+import { initSocket } from "./io/index.js";
 import applySecurity from "./middlewares/securityMiddleware.js";
 import globalError from "./middlewares/errorMiddleware.js";
 import ApiError from "./utils/apiError.js";
@@ -17,6 +18,8 @@ import dbConnection from "./config/dataBase.js";
 // Routes
 import mountRoutesIdentity from "./modules/identity/routes/index.js";
 import mountRoutesAttendance from "./modules/attendance/routes/index.js";
+import mountRoutesNotification from "./modules/notifications/routes/index.js";
+import mountRoutesConv from "./modules/conv/routes/index.js";
 
 // App init
 const app = express();
@@ -35,11 +38,13 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 // Mount routes
 mountRoutesIdentity(app);
 mountRoutesAttendance(app);
+mountRoutesNotification(app);
+mountRoutesConv(app);
 
 // Welcome Route
 app.get("/", (req, res) => {
   res.status(200).json({
-    message: "✅ Welcome to Attendance Back-End API 🚀",
+    message: "Welcome to Attendance Back-End API 🚀",
   });
 });
 
@@ -70,6 +75,10 @@ process.on("uncaughtException", (err) => {
       console.log(`🟢 Mode: ${MODE}`);
       console.log(`🟢 Server running on port: ${PORT}`);
     });
+
+    // Initialize Socket.io
+    initSocket(server);
+    console.log("🟢 Socket.io initialized");
 
     // Handle unhandled promise rejections
     process.on("unhandledRejection", (err) => {

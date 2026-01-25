@@ -47,6 +47,10 @@ const userSchema = new Schema(
       type: Date,
       default: Date.now,
     },
+    fcmTokens: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true }
 );

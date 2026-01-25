@@ -76,7 +76,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ahmed.ali@example.com\",\r\n    \"password\": \"abc123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"styles47d@gmail.com\",\r\n    \"password\": \"Abdalla200\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -373,6 +373,44 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "saveFcmToken",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fcmToken\": \"xxxxxxxxxxxxxxxxxxxx\"\n}"
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/save-fcm-token",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"save-fcm-token"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -476,7 +514,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{MainHost}}/api/v1/attendance/summary/68da76f391a76d10fc0aa364?from=2025-09-27&to=2025-09-29",
+							"raw": "{{MainHost}}/api/v1/attendance/summary/68dfb450f7cdbfbbece636c7?from=2025-12-01&to=2025-12-01",
 							"host": [
 								"{{MainHost}}"
 							],
@@ -485,16 +523,16 @@
 								"v1",
 								"attendance",
 								"summary",
-								"68da76f391a76d10fc0aa364"
+								"68dfb450f7cdbfbbece636c7"
 							],
 							"query": [
 								{
 									"key": "from",
-									"value": "2025-09-27"
+									"value": "2025-12-01"
 								},
 								{
 									"key": "to",
-									"value": "2025-09-29"
+									"value": "2025-12-01"
 								}
 							]
 						}
@@ -710,6 +748,403 @@
 								"adminDashboard",
 								"activate",
 								"68d54eb71a883f6b507a26e0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "createNotification (DB only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test Notification\",\n    \"message\": \"Hello from Postman\",\n    \"module\": \"system\",\n    \"importance\": \"low\",\n    \"toUser\": \"USER_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/notifications",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sendNotification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Test Notification\",\n    \"message\": \"Hello from Postman\",\n    \"module\": \"system\",\n    \"importance\": \"low\",\n    \"toUser\": [\"691cd20d892a726616f52f04\"]\n}"
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/notifications/send",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllNotifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/notifications",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "-createdAt",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "createdAt",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "message module",
+									"disabled": true
+								},
+								{
+									"key": "from",
+									"value": "2025-11-01",
+									"disabled": true
+								},
+								{
+									"key": "to",
+									"value": "2025-12-01",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "unread",
+									"disabled": true
+								},
+								{
+									"key": "keyword",
+									"value": "United States",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "markAllAsRead",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/notifications/mark-all",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"mark-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "markSpecificAsRead",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/notifications/mark/68a19daf512f4d7dfbb410e1",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"notifications",
+								"mark",
+								"68a19daf512f4d7dfbb410e1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "CreateOrGetConversation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"691cd25c892a726616f52f1d\"\n}"
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/chat/conversations/start",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"chat",
+								"conversations",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserConversations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/chat/conversations",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"chat",
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addMessage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"Hello from Postman!\"\n}"
+						},
+						"url": {
+							"raw": "{{MainHost}}/api/v1/chat/messages/692dbe84052701023aa03c5e",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"chat",
+								"messages",
+								"692dbe84052701023aa03c5e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getConversationMessages",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/chat/messages/692dbe84052701023aa03c5e",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"chat",
+								"messages",
+								"692dbe84052701023aa03c5e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "markMessagesSeen",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{MainHost}}/api/v1/chat/messages/seen/692dc77a1f8744e2331ff717",
+							"host": [
+								"{{MainHost}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"chat",
+								"messages",
+								"seen",
+								"692dc77a1f8744e2331ff717"
 							]
 						}
 					},
