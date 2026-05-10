@@ -1,299 +1,132 @@
-# 🏗️ Attendance Management System - Backend
+# Attendance System - API Documentation
 
-A **modern, scalable attendance management backend** built with **Node.js**, **Express**, and **MongoDB**.  
-Designed as a **modular monolith** with **enterprise-grade architecture** and **performance optimization**.
+## Overview
 
----
-
-### 🔗 Quick Links
-
-- [🌐 Production API](https://attendance-managment.vercel.app)
-- [💻 Local API](http://localhost:3000)
-- [📘 Postman Documentation](https://documenter.getpostman.com/view/38670371/2sB3dHVt3z)
+This API is designed for the **Attendance Management System**.  
+It is a comprehensive backend solution for employee attendance tracking, managing employees, attendance records, reports, and user authentication.
 
 ---
 
-## 📋 Table of Contents
+# Common Features
 
-- [Overview](#-overview)
-- [Architecture](#-architecture)
-- [Quick Start](#-quick-start)
-- [API Documentation](#-api-documentation)
-- [Modules](#-modules)
-- [Development](#-development)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Acknowledgments](#-acknowledgments)
+All list endpoints support the following features:
 
----
-
-## 🎯 Overview
-
-**Attendance Management System** is a comprehensive backend solution for employee attendance tracking, providing robust APIs for managing employees, attendance records, reports, and user authentication.
-Built with modern development practices and scalable architecture.
-
-### ✨ Key Features
-
-- 🔐 **JWT-based Authentication & Authorization**
-- 🏗️ **Modular Monolith Architecture**
-- 🛡️ **Enterprise Security Middlewares**
-- 📊 **Advanced Filtering & Pagination**
-- 🔍 **Full-text Search Capabilities**
-- 📝 **Input Validation & Sanitization**
-- ⚡ **High Performance Optimization**
-- 🚀 **Ready for Cloud Hosting**
+| Feature         | Description                   | Example                            |
+| --------------- | ----------------------------- | ---------------------------------- |
+| Pagination      | Split results into pages      | `?page=2&limit=20`                 |
+| Sorting         | Sort results by a field       | `?sort=-createdAt` or `?sort=name` |
+| Field Selection | Return only specific fields   | `?fields=name,email,phone`         |
+| Filtering       | Filter results by exact match | `?status=active&role=admin`        |
+| Range Filtering | Filter by numeric ranges      | `?jobId[lte]=200&jobId[gte]=100`   |
+| Date Range      | Filter by date interval       | `?from=2025-01-01&to=2025-12-31`   |
+| Search          | Text search in string fields  | `?search=101`                      |
 
 ---
 
-## 🏛️ Architecture
+# Identity Module
 
-```bash
-attendance-management-backend/
-│
-├── 📁 modules/                 # Business Logic Modules
-│   ├── 🏷️ identity/           # Authentication & Users
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── validators/
-│   │
-│   ├── 👥 employee/           # Employee Management
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── validators/
-│   │
-│   ├── 📊 attendance/         # Attendance Tracking
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── validators/
-│   │
-│   └── 📈 report/             # Reporting & Analytics
-│       ├── controllers/
-│       ├── models/
-│       ├── routes/
-│       ├── services/
-│       └── validators/
-│
-├── 📁 middlewares/            # Application Middlewares
-│   ├── auth.js
-│   ├── errorMiddleware.js
-│   └── security.js
-│
-├── 📁 utils/                  # Utility Functions
-│   ├── apiError.js
-│   ├── apiFeatures.js
-│   └── sanitizeApp.js
-│
-├── 📁 config/                 # Configuration Files
-│   ├── database.js
-│   └── environment.js
-│
-├── 🚀 server.js               # Application Entry Point
-├── 📄 package.json
-└── 🔧 .env.example
-```
-
-yaml
-Copy code
-
-### 🧠 Technology Stack
-
-| Layer          | Technology                      |
-| -------------- | ------------------------------- |
-| Runtime        | Node.js 18+                     |
-| Framework      | Express.js 4.x                  |
-| Database       | MongoDB (Mongoose)              |
-| Authentication | JWT (JSON Web Tokens)           |
-| Security       | Helmet, HPP, Express Rate Limit |
-| Validation     | Joi                             |
+| Endpoint                         | Method | Description                               |
+| -------------------------------- | ------ | ----------------------------------------- |
+| `/api/v1/auth/signUp`            | POST   | Register a new user                      |
+| `/api/v1/auth/logIn`             | POST   | Login                                    |
+| `/api/v1/updatePassword`         | PUT    | Change current user password             |
 
 ---
 
-## 🚀 Quick Start
+# User Dashboard Module
 
-### Prerequisites
+## Attendance Actions
 
-- Node.js 18+
-- MongoDB Atlas or local MongoDB
-- npm or yarn package manager
+| Endpoint                            | Method | Description                           |
+| ----------------------------------- | ------ | ------------------------------------- |
+| `/api/v1/attendance/checkin`        | POST   | Record check-in time                  |
+| `/api/v1/attendance/toggle-break`   | POST   | Start or end break                    |
+| `/api/v1/attendance/checkout`       | POST   | Record check-out time                 |
 
-### Installation
+## User Profile Endpoints
 
-#### 1️⃣ Clone Repository
+| Endpoint                               | Method | Description                           |
+| -------------------------------------- | ------ | ------------------------------------- |
+| `/api/v1/userDashboard/getMyData`      | GET    | Get current user data                |
+| `/api/v1/userDashboard/updateMyData`   | PUT    | Update current user data             |
+| `/api/v1/save-fcm-token`               | POST   | Save FCM token for push notifications |
 
-```bash
-git clone https://github.com/your-username/
-cd backend
-2️⃣ Install Dependencies
-bash
-Copy code
-npm install
-3️⃣ Start Application
-Development Mode (auto-reload):
+---
 
-bash
-Copy code
-npm run dev
-Production Mode:
+# Admin Dashboard Module
 
-bash
-Copy code
-npm start
-✅ Test API
-bash
-Copy code
-curl http://localhost:3000/api/v1/health
-Expected response:
+## Attendance Management Endpoints
 
-json
-Copy code
-{
-  "status": "success",
-  "message": "🚀 Attendance Management API is running!",
-  "timestamp": "2024-01-15T10:30:00.000Z"
-}
-🌐 API Documentation
-Base URLs
-Environment	URL
-Production	https://attendance-backend-mu-seven.vercel.app
-Local	http://localhost:3000
+| Endpoint                                      | Method | Description                           |
+| --------------------------------------------- | ------ | ------------------------------------- |
+| `/api/v1/attendance`                          | GET    | Get all attendance records (paginated, filtered) |
+| `/api/v1/attendance/{attendanceId}`           | GET    | Get specific attendance record        |
+| `/api/v1/attendance/summary/{userId}`         | GET    | Get attendance summary for user       |
 
-Versioning
-All endpoints are prefixed with:
+## User Management Endpoints
 
-bash
-Copy code
-/api/v1
-🧾 Postman Documentation
-Explore all API endpoints using the included Postman Collection:
+| Endpoint                                     | Method | Description                          |
+| -------------------------------------------- | ------ | ------------------------------------ |
+| `/api/v1/adminDashboard`                     | POST   | Create a new user                    |
+| `/api/v1/adminDashboard`                     | GET    | Get all users (paginated, filtered)  |
+| `/api/v1/adminDashboard/{userId}`            | GET    | Get specific user                    |
+| `/api/v1/adminDashboard/{userId}`            | PUT    | Update user role                     |
+| `/api/v1/adminDashboard/deactivate/{userId}` | PUT    | Deactivate user                      |
+| `/api/v1/adminDashboard/activate/{userId}`   | PUT    | Activate user                        |
 
-File: PostMan_Collection.json
+---
 
-🧩 Modules
-🏷️ Identity Module
-User Registration & Authentication
+# Notifications Module
 
-JWT Token Management
+| Endpoint                                      | Method | Description                          |
+| --------------------------------------------- | ------ | ------------------------------------ |
+| `/api/v1/notifications`                       | POST   | Create notification in database only |
+| `/api/v1/notifications/send`                  | POST   | Create and send notification         |
+| `/api/v1/notifications`                       | GET    | Get all notifications                |
+| `/api/v1/notifications/mark-all`              | PATCH  | Mark all notifications as read       |
+| `/api/v1/notifications/mark/{notificationId}` | PATCH  | Mark specific notification as read   |
 
-Role-based Access Control
+---
 
-Password Reset & Recovery
+# Chat Module
 
-👥 Employee Module
-Employee Profile Management
+| Endpoint                                      | Method | Description                           |
+| --------------------------------------------- | ------ | ------------------------------------- |
+| `/api/v1/chat/conversations/start`            | POST   | Create or get conversation with user  |
+| `/api/v1/chat/conversations`                  | GET    | Get user conversations                |
+| `/api/v1/chat/messages/{conversationId}`      | POST   | Add message to conversation           |
+| `/api/v1/chat/messages/{conversationId}`      | GET    | Get conversation messages             |
+| `/api/v1/chat/messages/seen/{conversationId}` | PUT    | Mark messages as seen                 |
 
-Department & Position Tracking
+---
 
-Employment Status Management
+# Authentication
 
-Employee Search & Filtering
+JWT is used for authentication. Most endpoints require a Bearer token in the Authorization header:
+Authorization: Bearer {{JWT}}
 
-📊 Attendance Module
-Clock-in/Clock-out Operations
+text
 
-Attendance Record Management
+---
 
-Late Arrival Tracking
+# Attendance Status Flow
 
-Leave Management
+checkin -> on_break -> back_from_break -> checkout
 
-Overtime Calculation
+| Status             | Description                          |
+| ------------------ | ------------------------------------ |
+| `checked_in`       | Employee has checked in              |
+| `on_break`         | Employee is on break                 |
+| `back_from_break`  | Employee returned from break         |
+| `checked_out`      | Employee has checked out             |
 
-📈 Report Module
-Attendance Summary Reports
+---
 
-Department-wise Analytics
+# Notes
 
-Employee Performance Reports
-
-Export Functionality
-
-Custom Date Range Reporting
-
-🔧 Development
-Available Scripts
-Command	Description
-npm start	Start production server
-npm run dev	Start development server with nodemon
-npm run lint	Run ESLint for code quality
-npm run format	Format code with Prettier
-npm test	Run test suite
-
-🧹 Code Standards
-ESLint for linting
-
-Prettier for formatting
-
-RESTful API design
-
-Async/Await for async ops
-
-Modular & reusable codebase
-
-Adding New Modules
-Create new folder in modules/
-
-Add controllers, models, routes, services, and validators
-
-Mount routes in main app
-
-Update documentation
-
-Example:
-
-cpp
-Copy code
-modules/
-└── new-module/
-    ├── controllers/
-    ├── models/
-    ├── routes/
-    ├── services/
-    └── validators/
-🤝 Contributing
-We welcome contributions! 🎉
-
-Development Workflow
-Fork the repository
-
-Create feature branch:
-
-bash
-Copy code
-git checkout -b feature/amazing-feature
-Commit changes:
-
-bash
-Copy code
-git commit -m "Add amazing feature"
-Push branch:
-
-bash
-Copy code
-git push origin feature/amazing-feature
-Open Pull Request
-
-Code Review
-At least one review required
-
-All tests must pass
-
-Documentation updated
-
-📄 License
-This project is licensed under the MIT License.
-See the LICENSE file for details.
-
-🏆 Acknowledgments
-Built with ❤️ using Express.js and MongoDB
-
-Security powered by Helmet and JWT
-
-API Documentation with Postman
-
-```
+- All list endpoints support pagination, sorting, filtering, and search.
+- Date fields should be sent in ISO 8601 format (e.g., `2025-09-26`).
+- Check-in must be performed before check-out.
+- Break can only be toggled after check-in and before check-out.
+- FCM tokens are used for push notifications.
+- The `{{MainHost}}` variable should be replaced with your API base URL.
